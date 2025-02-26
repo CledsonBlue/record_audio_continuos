@@ -3,6 +3,7 @@ package com.example.projeto_teste
 import android.media.AudioRecord
 import android.media.AudioFormat
 import android.media.MediaRecorder
+import android.media.AudioManager
 import android.util.Log
 import java.io.File
 import java.io.FileOutputStream
@@ -65,15 +66,15 @@ class MainActivity : FlutterActivity() {
     private fun startRecording() {
     Log.d("AudioService", "Iniciando gravação...")
     val sampleRate = 16000
-    val minBufferSize = AudioRecord.getMinBufferSize(
-        sampleRate,
-        AudioFormat.CHANNEL_IN_MONO,
-        AudioFormat.ENCODING_PCM_16BIT
-    )
+
     // Dobrar o tamanho mínimo do buffer para segurança
-    val bufferSize = minBufferSize * 2
+    val bufferSize = 32000
 
     Log.d("AudioService", "Buffer size calculado: $bufferSize bytes")
+
+    val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+    audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
+    audioManager.isSpeakerphoneOn = false
 
     // Cria o AudioRecord
     audioRecorder = AudioRecord(

@@ -73,12 +73,16 @@ class MainActivity : FlutterActivity() {
     Log.d("AudioService", "Buffer size calculado: $bufferSize bytes")
 
     val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-    audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
-    audioManager.isSpeakerphoneOn = false
+    audioManager.apply {
+        mode = AudioManager.MODE_IN_COMMUNICATION
+        isSpeakerphoneOn = false
+        setStreamVolume(AudioManager.STREAM_VOICE_CALL, getStreamMaxVolume(AudioManager.STREAM_VOICE_CALL), 0)
+    }
+
 
     // Cria o AudioRecord
     audioRecorder = AudioRecord(
-        MediaRecorder.AudioSource.MIC,
+        MediaRecorder.AudioSource.VOICE_COMMUNICATION,
         sampleRate,
         AudioFormat.CHANNEL_IN_MONO,
         AudioFormat.ENCODING_PCM_16BIT,
